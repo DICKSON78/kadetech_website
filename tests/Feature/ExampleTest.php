@@ -161,6 +161,40 @@ class ExampleTest extends TestCase
             ->assertDontSee('National Office Auditing of Tanzania');
     }
 
+    public function test_each_project_has_a_shareable_short_link(): void
+    {
+        foreach (config('projects') as $project) {
+            $this->get('/'.$project['id'])
+                ->assertRedirect(route('projects').'#'.$project['id']);
+        }
+    }
+
+    public function test_short_links_point_at_the_deployed_system_once_a_url_is_set(): void
+    {
+        config()->set('projects', [
+            ['id' => 'e-kanisa', 'name' => 'E-Kanisa', 'url' => 'https://e-kanisa.co.tz'],
+        ]);
+
+        $this->get('/e-kanisa')->assertRedirect('https://e-kanisa.co.tz');
+    }
+
+    public function test_short_links_404_for_unknown_projects(): void
+    {
+        $this->get('/not-a-project')->assertNotFound();
+    }
+
+    public function test_configured_project_urls_are_absolute_https(): void
+    {
+        $this->assertNotEmpty(config('projects'));
+
+        foreach (config('projects') as $project) {
+            $this->assertTrue(
+                $project['url'] === '' || str_starts_with($project['url'], 'https://'),
+                "{$project['id']} must be left empty or link over https."
+            );
+        }
+    }
+
     public function test_every_project_can_be_requested_as_a_demo(): void
     {
         $response = $this->get(route('projects'))->assertOk();
