@@ -1,0 +1,386 @@
+@import '@fortawesome/fontawesome-free/css/all.css';
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+
+@theme {
+    --font-sans: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+    --color-navy-950: #020b18;
+    --color-navy-900: #06162d;
+    --color-navy-800: #0a2448;
+    --color-navy-700: #123765;
+    --color-navy-200: #b9cce3;
+    --color-navy-100: #dce7f5;
+    --color-gold-50: #fbf8f0;
+    --color-gold-100: #f6edda;
+    --color-gold-200: #ecd49d;
+    --color-gold-300: #dfbd6b;
+    --color-gold-400: #d3aa52;
+    --color-gold-500: #bf9140;
+    --color-gold-600: #a8772e;
+    --shadow-soft: 0 24px 70px -32px rgba(2, 11, 24, 0.24);
+    --shadow-gold: 0 18px 48px -20px rgba(191, 145, 64, 0.55);
+}
+
+@layer base {
+    *,
+    *::before,
+    *::after {
+        box-sizing: border-box;
+    }
+
+    html {
+        scroll-behavior: smooth;
+        scroll-padding-top: 7.5rem;
+    }
+
+    ::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: color-mix(in srgb, var(--color-navy-950) 8%, transparent);
+    }
+
+    ::-webkit-scrollbar-thumb {
+        border: 2px solid transparent;
+        border-radius: 999px;
+        background: linear-gradient(180deg, var(--color-gold-300), var(--color-gold-500));
+        background-clip: content-box;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(180deg, var(--color-gold-200), var(--color-gold-400));
+        background-clip: content-box;
+    }
+
+    ::-webkit-scrollbar-corner {
+        background: transparent;
+    }
+
+    @supports not (selector(::-webkit-scrollbar)) {
+        html {
+            scrollbar-color: var(--color-gold-400) transparent;
+            scrollbar-width: thin;
+        }
+    }
+
+    body {
+        @apply m-0 bg-white font-sans text-slate-600 antialiased;
+    }
+
+    a,
+    button,
+    input,
+    textarea {
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    button,
+    a {
+        @apply outline-none;
+    }
+
+    ::selection {
+        background: #dfbd6b;
+        color: #020b18;
+    }
+}
+
+@layer components {
+    .container-shell {
+        @apply mx-auto w-full max-w-[1280px] px-5 sm:px-8 lg:px-12;
+    }
+
+    .section-space {
+        @apply py-20 sm:py-24 lg:py-32;
+    }
+
+    .eyebrow {
+        @apply inline-flex items-center gap-2.5 text-xs font-semibold uppercase tracking-[0.22em] text-gold-600;
+    }
+
+    .eyebrow::before {
+        content: '';
+        @apply h-px w-8 bg-gold-400;
+    }
+
+    .section-title {
+        @apply text-balance mt-5 text-3xl font-semibold leading-[1.15] tracking-[-0.04em] text-navy-900 sm:text-4xl lg:text-5xl;
+    }
+
+    .section-copy {
+        @apply mt-5 max-w-2xl text-sm leading-7 text-slate-500 sm:text-base sm:leading-8;
+    }
+
+    .btn-primary {
+        @apply inline-flex min-h-13 items-center justify-center gap-2.5 rounded-full bg-gold-400 px-6 py-3.5 text-sm font-semibold text-navy-950 shadow-gold transition duration-300 hover:-translate-y-0.5 hover:bg-gold-300 focus-visible:ring-2 focus-visible:ring-gold-300 focus-visible:ring-offset-2;
+    }
+
+    .btn-secondary {
+        @apply inline-flex min-h-13 items-center justify-center gap-2.5 rounded-full border border-navy-200 bg-white px-6 py-3.5 text-sm font-semibold text-navy-900 transition duration-300 hover:-translate-y-0.5 hover:border-gold-400 hover:bg-gold-50 focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2;
+    }
+
+    .btn-light {
+        @apply inline-flex min-h-13 items-center justify-center gap-2.5 rounded-full bg-white px-6 py-3.5 text-sm font-semibold text-navy-900 shadow-lg shadow-navy-950/20 transition duration-300 hover:-translate-y-0.5 hover:bg-gold-50 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-navy-900;
+    }
+
+    .nav-link {
+        @apply relative py-2 text-sm font-medium text-slate-600 transition;
+    }
+
+    .nav-link::after {
+        content: '';
+        @apply absolute inset-x-0 -bottom-0.5 h-px origin-right scale-x-0 bg-gold-400 transition-transform duration-300;
+    }
+
+    .nav-link.is-active {
+        @apply text-navy-900;
+    }
+
+    .nav-link.is-active::after {
+        @apply origin-left scale-x-100;
+    }
+
+    .masthead-nav-link {
+        @apply relative flex items-center gap-2 border border-transparent px-3 py-2.5 text-xs font-medium text-slate-300 transition duration-300;
+    }
+
+    .masthead-nav-link i {
+        @apply text-gold-300/80 transition-colors duration-300;
+    }
+
+    .masthead-nav-link.is-active i {
+        @apply text-gold-300;
+    }
+
+    .masthead-nav-link.is-active {
+        @apply border-gold-300/30 bg-gold-400/10 text-white;
+    }
+
+    .masthead-nav-link.is-active::after {
+        content: '';
+        @apply absolute inset-x-3 -bottom-px h-px bg-gold-300;
+    }
+
+    .masthead-mobile-link {
+        @apply flex items-center gap-4 border border-white/10 bg-white/[0.04] px-4 py-3 text-sm font-medium text-white transition duration-300;
+    }
+
+    .masthead-mobile-link.is-active {
+        @apply border-gold-300/50 bg-gold-400/10;
+    }
+
+    .service-card {
+        @apply relative overflow-hidden rounded-[2rem] border border-slate-200 bg-white p-7 shadow-soft sm:p-8;
+    }
+
+    .service-card::after {
+        content: '';
+        @apply pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full bg-gold-100/50 blur-2xl;
+    }
+
+    .service-icon {
+        @apply relative z-10 flex h-14 w-14 items-center justify-center rounded-2xl bg-navy-900 text-gold-300;
+    }
+
+    .projects-section {
+        background: #f7f8fa;
+    }
+
+    .project-step {
+        --project-accent: #a8772e;
+        --project-surface: #ffffff;
+        --project-fade: #eaeef4;
+        --project-angle: 160deg;
+        @apply sticky top-0 flex min-h-screen items-center text-navy-900;
+        background: linear-gradient(var(--project-angle), var(--project-surface) 0%, var(--project-fade) 62%);
+    }
+
+    .project-step[data-step='1'] {
+        --project-accent: #a8772e;
+        --project-surface: #ffffff;
+        --project-fade: #e9eef5;
+        --project-angle: 160deg;
+        z-index: 10;
+    }
+
+    .project-step[data-step='2'] {
+        --project-accent: #8f5f2a;
+        --project-surface: #f8f9fb;
+        --project-fade: #e7ecf3;
+        --project-angle: 200deg;
+        z-index: 11;
+    }
+
+    .project-step[data-step='3'] {
+        --project-accent: #b5903f;
+        --project-surface: #fdfcf9;
+        --project-fade: #ece7dc;
+        --project-angle: 130deg;
+        z-index: 12;
+    }
+
+    .project-step[data-step='4'] {
+        --project-accent: #96702f;
+        --project-surface: #f9fafc;
+        --project-fade: #e4e9f0;
+        --project-angle: 180deg;
+        z-index: 13;
+    }
+
+    .project-step-number {
+        @apply block select-none font-mono text-6xl font-bold leading-none sm:text-7xl lg:text-8xl;
+        color: var(--project-accent);
+        opacity: 0.22;
+    }
+
+    .project-step-line {
+        background-color: var(--project-accent);
+        opacity: 0.55;
+    }
+
+    .project-badge {
+        @apply inline-block rounded-full border px-3 py-1 font-mono text-xs font-bold;
+        color: var(--project-accent);
+        border-color: color-mix(in srgb, var(--project-accent) 30%, transparent);
+        background-color: color-mix(in srgb, var(--project-accent) 10%, transparent);
+    }
+
+    .feature-card {
+        @apply rounded-3xl border border-slate-200 bg-white p-6 sm:p-7;
+    }
+
+    .contact-link {
+        @apply flex items-center justify-between gap-4 rounded-2xl border border-white/10 bg-white/[0.04] p-5;
+    }
+
+    .form-label {
+        @apply mb-2 block text-sm font-semibold text-navy-900;
+    }
+
+    .form-input {
+        @apply w-full rounded-2xl border border-slate-200 bg-white px-4 py-3.5 text-sm text-navy-900 outline-none transition placeholder:text-slate-400 focus:border-gold-400 focus:ring-4 focus:ring-gold-100;
+    }
+
+    .form-error {
+        @apply mt-2 text-xs font-medium text-red-600;
+    }
+
+    .page-loader {
+        @apply pointer-events-none fixed inset-x-0 top-0 z-[100] h-0.5 origin-left scale-x-0 bg-gold-300 opacity-0 transition duration-300;
+    }
+
+    .page-loader.is-active {
+        @apply scale-x-[0.72] opacity-100;
+    }
+
+    [data-page-content] {
+        transition:
+            opacity 180ms ease,
+            transform 180ms ease;
+    }
+
+    [data-page-content].is-leaving {
+        opacity: 0.35;
+        transform: translateY(6px);
+    }
+
+    .skip-link {
+        @apply fixed left-4 top-4 z-[100] -translate-y-24 rounded-full bg-white px-5 py-3 text-sm font-semibold text-navy-900 shadow-xl transition focus:translate-y-0;
+    }
+
+    [data-header].header-scrolled {
+        @apply border-white/15 shadow-2xl shadow-black/20;
+    }
+}
+
+@layer utilities {
+    .text-balance {
+        text-wrap: balance;
+    }
+
+    .hero-grid {
+        background-image:
+            linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+        background-size: 38px 38px;
+    }
+
+    .dot-grid {
+        background-image: radial-gradient(rgba(191, 145, 64, 0.2) 1px, transparent 1px);
+        background-size: 18px 18px;
+    }
+
+    .orbit {
+        animation: orbit 18s linear infinite;
+    }
+
+    .orbit-reverse {
+        animation: orbit-reverse 24s linear infinite;
+    }
+
+    .js .reveal {
+        opacity: 0;
+        transform: translateY(28px);
+        transition:
+            opacity 700ms cubic-bezier(0.22, 1, 0.36, 1),
+            transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .js .reveal.reveal-left {
+        transform: translateX(-28px);
+    }
+
+    .js .reveal.reveal-right {
+        transform: translateX(28px);
+    }
+
+    .js .reveal.is-visible {
+        opacity: 1;
+        transform: translate(0);
+    }
+}
+
+@keyframes orbit {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes orbit-reverse {
+    to {
+        transform: rotate(-360deg);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+    }
+
+    .js .reveal {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/*
+ * Must stay unlayered: Font Awesome is imported as plain CSS and sets
+ * `display` on `.fa-solid`, which outranks Tailwind's layered utilities.
+ * Without this, hiding any icon font element has no effect.
+ */
+[hidden] {
+    display: none !important;
+}
