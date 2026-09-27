@@ -14,7 +14,9 @@
 /.zed
 /auth.json
 /node_modules
-/public/build
+# public/build is committed on purpose: shared hosting has no Node, so the
+# compiled CSS/JS must be in the repo for a plain `git pull` to work.
+# After changing anything in resources/ run: npm run build && git add public/build
 /public/fonts-manifest.dev.json
 /public/hot
 /public/storage
