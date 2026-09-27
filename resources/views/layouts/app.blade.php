@@ -1,15 +1,69 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
+    @php
+        $seoTitle = trim($__env->yieldContent('title')) ?: 'KADETECH | Digital, AI & Camera Solutions';
+        $seoDescription = trim($__env->yieldContent('description')) ?: 'KADETECH provides business websites, AI and machine learning solutions, and professional camera installations in Dodoma, Tanzania.';
+        $seoCanonical = url()->current();
+        $seoImage = asset('images/kade-og.jpg');
+    @endphp
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="@yield('description', 'KADETECH provides business websites, AI and machine learning solutions, and professional camera installations in Dodoma, Tanzania.')">
+    <title>{{ $seoTitle }}</title>
+    <meta name="description" content="{{ $seoDescription }}">
+    <link rel="canonical" href="{{ $seoCanonical }}">
     <meta name="theme-color" content="#06162d">
+    <meta name="robots" content="index, follow, max-image-preview:large">
+    <meta name="author" content="KADETECH">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="KADETECH">
+    <meta property="og:locale" content="{{ str_replace('_', '-', app()->getLocale()) }}">
+    <meta property="og:title" content="{{ $seoTitle }}">
+    <meta property="og:description" content="{{ $seoDescription }}">
+    <meta property="og:url" content="{{ $seoCanonical }}">
+    <meta property="og:image" content="{{ $seoImage }}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="KADETECH">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ $seoTitle }}">
+    <meta name="twitter:description" content="{{ $seoDescription }}">
+    <meta name="twitter:image" content="{{ $seoImage }}">
     <link rel="icon" href="{{ asset('favicon.svg') }}" type="image/svg+xml">
     <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="32x32">
     <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png') }}">
-    <title>@yield('title', 'KADETECH | Digital, AI & Camera Solutions')</title>
-    @fonts
+    <link rel="preload" href="{{ asset('fonts/poppins-latin-400-normal.woff2') }}" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="{{ asset('fonts/poppins-latin-600-normal.woff2') }}" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="{{ asset('fonts/poppins-latin-700-normal.woff2') }}" as="font" type="font/woff2" crossorigin>
+    <script type="application/ld+json">{!! json_encode([
+        '@context' => 'https://schema.org',
+        '@type' => 'ProfessionalService',
+        'name' => 'KADETECH',
+        'description' => $seoDescription,
+        'url' => $seoCanonical,
+        'logo' => asset('images/kade-logo-mark.png'),
+        'image' => $seoImage,
+        'email' => 'kadetech.online@gmail.com',
+        'telephone' => '+255750731387',
+        'priceRange' => '$$',
+        'address' => [
+            '@type' => 'PostalAddress',
+            'addressLocality' => 'Dodoma',
+            'addressRegion' => 'Dodoma',
+            'addressCountry' => 'TZ',
+        ],
+        'areaServed' => [
+            '@type' => 'Country',
+            'name' => 'Tanzania',
+        ],
+        'knowsAbout' => [
+            'Business websites',
+            'Artificial intelligence',
+            'Machine learning',
+            'CCTV and camera installation',
+            'Point of sale systems',
+        ],
+    ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('head')
 </head>
@@ -35,12 +89,8 @@
             <div class="container-shell">
                 <div class="flex min-h-[84px] items-center gap-5">
                     <a href="{{ route('home') }}" class="flex shrink-0 items-center gap-3" aria-label="KADETECH home">
-                        <span class="relative flex h-12 w-12 items-center justify-center rounded-2xl border border-gold-300/50 bg-navy-900 shadow-lg shadow-black/20">
-                            <svg viewBox="0 0 40 40" class="h-9 w-9" fill="none" aria-hidden="true">
-                                <path d="M10 8v24" stroke="#DFBD6B" stroke-width="3" stroke-linecap="round"/>
-                                <path d="M29 8 12 20l18 12M22 20h10" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                            <span class="absolute -right-1 -top-1 h-2 w-2 rounded-full bg-gold-300"></span>
+                        <span class="flex h-12 w-12 items-center justify-center rounded-2xl border border-gold-300/50 bg-navy-900 shadow-lg shadow-black/20">
+                            <img src="{{ asset('images/kade-logo-mark-light.png') }}" alt="" width="36" height="36" class="h-9 w-9">
                         </span>
                         <span>
                             <span class="block text-base font-bold leading-none tracking-[0.14em] text-white">KADETECH</span>
@@ -154,10 +204,7 @@
                 <div>
                     <a href="{{ route('home') }}" class="inline-flex items-center gap-3" aria-label="KADETECH home">
                         <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-navy-950 shadow-lg shadow-navy-950/20">
-                            <svg viewBox="0 0 40 40" class="h-8 w-8" fill="none" aria-hidden="true">
-                                <path d="M10 8v24" stroke="#DFBD6B" stroke-width="3" stroke-linecap="round"/>
-                                <path d="M29 8 12 20l18 12M22 20h10" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
+                            <img src="{{ asset('images/kade-logo-mark-light.png') }}" alt="" width="32" height="32" class="h-8 w-8">
                         </span>
                         <span>
                             <span class="block text-base font-bold tracking-[0.14em] text-white">KADETECH</span>

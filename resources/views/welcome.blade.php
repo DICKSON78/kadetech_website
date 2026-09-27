@@ -224,10 +224,7 @@
                     <div class="rounded-[2rem] border border-white/10 bg-white/[0.04] p-5 backdrop-blur-sm sm:p-7">
                         <div class="flex items-center justify-between border-b border-white/10 pb-5">
                             <p class="text-xs font-semibold uppercase tracking-[0.2em] text-gold-300">What we bring</p>
-                            <svg viewBox="0 0 40 40" class="h-9 w-9" fill="none" aria-hidden="true">
-                                <path d="M10 8v24" stroke="#DFBD6B" stroke-width="3" stroke-linecap="round"/>
-                                <path d="M29 8 12 20l18 12M22 20h10" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
+                            <img src="{{ asset('images/kade-logo-mark-light.png') }}" alt="" width="36" height="36" class="h-9 w-9">
                         </div>
 
                         <div class="mt-3 divide-y divide-white/10" role="list">

@@ -3,7 +3,9 @@
 namespace Tests\Feature;
 
 use App\Mail\ContactMessage;
+use App\Providers\AppServiceProvider;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\URL;
 use Tests\TestCase;
 
 class ExampleTest extends TestCase
@@ -51,6 +53,78 @@ class ExampleTest extends TestCase
                 ->assertSee('data-page-link', false)
                 ->assertSee($content);
         }
+    }
+
+    public function test_every_public_page_exposes_search_and_share_metadata(): void
+    {
+        foreach (['home', 'services', 'why-us', 'projects', 'contact'] as $routeName) {
+            $response = $this->get(route($routeName))->assertOk();
+
+            $response->assertSee('<link rel="canonical" href="'.route($routeName).'">', false)
+                ->assertSee('name="robots" content="index, follow, max-image-preview:large"', false)
+                ->assertSee('property="og:type" content="website"', false)
+                ->assertSee('property="og:title"', false)
+                ->assertSee('property="og:description"', false)
+                ->assertSee('property="og:image" content="'.asset('images/kade-og.jpg').'"', false)
+                ->assertSee('name="twitter:card" content="summary_large_image"', false)
+                ->assertSee('type="application/ld+json"', false);
+        }
+    }
+
+    public function test_public_pages_publish_distinct_titles_and_descriptions(): void
+    {
+        $titles = [];
+        $descriptions = [];
+
+        foreach (['home', 'services', 'why-us', 'projects', 'contact'] as $routeName) {
+            $html = $this->get(route($routeName))->assertOk()->getContent();
+
+            preg_match('/<title>(.*?)<\/title>/s', $html, $titleMatch);
+            preg_match('/name="description" content="(.*?)"/s', $html, $descriptionMatch);
+
+            $this->assertNotEmpty($titleMatch[1] ?? '', "{$routeName} is missing a title");
+            $this->assertNotEmpty($descriptionMatch[1] ?? '', "{$routeName} is missing a description");
+
+            $titles[] = $titleMatch[1];
+            $descriptions[] = $descriptionMatch[1];
+
+            $this->assertLessThanOrEqual(60, mb_strlen($titleMatch[1]), "{$routeName} title is too long for search results");
+            $this->assertGreaterThan(50, mb_strlen($descriptionMatch[1]), "{$routeName} description is too thin");
+            $this->assertLessThanOrEqual(160, mb_strlen($descriptionMatch[1]), "{$routeName} description is too long");
+        }
+
+        $this->assertCount(count($titles), array_unique($titles), 'Titles must be unique per page');
+        $this->assertCount(count($descriptions), array_unique($descriptions), 'Descriptions must be unique per page');
+    }
+
+    public function test_sitemap_lists_every_public_page_as_xml(): void
+    {
+        $response = $this->get(route('sitemap'))->assertOk();
+
+        $response->assertHeader('Content-Type', 'application/xml; charset=UTF-8');
+
+        $xml = $response->getContent();
+
+        $this->assertStringStartsWith('<?xml version="1.0" encoding="UTF-8"?>', $xml);
+        $this->assertStringContainsString('http://www.sitemaps.org/schemas/sitemap/0.9', $xml);
+
+        foreach (['home', 'services', 'why-us', 'projects', 'contact'] as $routeName) {
+            $this->assertStringContainsString('<loc>'.route($routeName).'</loc>', $xml);
+        }
+
+        $this->assertSame(
+            substr_count($xml, '<url>'),
+            substr_count($xml, '</url>'),
+            'Every sitemap url element must be closed',
+        );
+    }
+
+    public function test_robots_txt_advertises_the_sitemap(): void
+    {
+        $robots = file_get_contents(public_path('robots.txt'));
+
+        $this->assertStringContainsString('User-agent: *', $robots);
+        $this->assertStringContainsString('Sitemap: https://kadetech.co.tz/sitemap.xml', $robots);
     }
 
     public function test_all_public_heroes_use_the_shared_services_shell(): void
@@ -119,6 +193,24 @@ class ExampleTest extends TestCase
         $response->assertSee('<i data-close-icon class="fa-solid fa-xmark h-5 w-5" hidden', false)
             ->assertDontSee('<i data-menu-icon class="fa-solid fa-bars h-5 w-5" hidden', false)
             ->assertDontSee('fa-xmark hidden', false);
+    }
+
+    public function test_production_forces_the_https_scheme(): void
+    {
+        $this->app['env'] = 'production';
+
+        (new AppServiceProvider($this->app))->boot();
+
+        $this->assertStringStartsWith('https://', URL::to('/'));
+    }
+
+    public function test_non_production_environments_do_not_force_https(): void
+    {
+        $this->app['env'] = 'local';
+
+        (new AppServiceProvider($this->app))->boot();
+
+        $this->assertStringStartsWith('http://', URL::to('/'));
     }
 
     public function test_public_heroes_have_no_vertical_line_decoration(): void
