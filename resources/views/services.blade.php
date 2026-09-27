@@ -118,7 +118,7 @@
                     </ul>
                     <div class="mt-8 flex flex-wrap items-center gap-5">
                         <a href="mailto:kadetech.online@gmail.com?subject=AI%20solution%20inquiry" class="inline-flex items-center gap-2 text-sm font-semibold text-navy-900">Explore an AI solution <i class="fa-solid fa-arrow-right h-4 w-4" aria-hidden="true"></i></a>
-                        <a href="{{ route('projects') }}#kadepos" class="text-xs font-semibold text-gold-600">KADEPOS</a>
+                        <a href="{{ route('projects') }}#medicore" class="text-xs font-semibold text-gold-600">Medicore</a>
                     </div>
                 </article>
 
@@ -134,7 +134,7 @@
                     </ul>
                     <div class="mt-8 flex flex-wrap items-center gap-5">
                         <a href="mailto:kadetech.online@gmail.com?subject=Camera%20installation%20inquiry" class="inline-flex items-center gap-2 text-sm font-semibold text-navy-900">Plan your installation <i class="fa-solid fa-arrow-right h-4 w-4" aria-hidden="true"></i></a>
-                        <a href="{{ route('projects') }}#rems" class="text-xs font-semibold text-gold-600">REMS</a>
+                        <a href="{{ route('projects') }}#realestate" class="text-xs font-semibold text-gold-600">RealEstate</a>
                     </div>
                 </article>
             </div>

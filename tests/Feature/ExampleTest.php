@@ -146,13 +146,13 @@ class ExampleTest extends TestCase
             ->assertSee('id="projects"', false)
             ->assertSee('What we have built')
             ->assertSee('E-Kanisa')
-            ->assertSee('KADEPOS')
+            ->assertSee('Medicore')
             ->assertSee('KADEFinance')
-            ->assertSee('REMS')
+            ->assertSee('RealEstate')
             ->assertSee('id="e-kanisa"', false)
-            ->assertSee('id="kadepos"', false)
+            ->assertSee('id="medicore"', false)
             ->assertSee('id="kadefinance"', false)
-            ->assertSee('id="rems"', false)
+            ->assertSee('id="realestate"', false)
             ->assertSee('data-project-step', false)
             ->assertDontSee('data-project-dot', false)
             ->assertDontSee('project-dots', false)
@@ -161,14 +161,57 @@ class ExampleTest extends TestCase
             ->assertDontSee('National Office Auditing of Tanzania');
     }
 
+    public function test_every_project_can_be_requested_as_a_demo(): void
+    {
+        $response = $this->get(route('projects'))->assertOk();
+
+        foreach (['E-Kanisa', 'Medicore', 'KADEFinance', 'RealEstate'] as $name) {
+            $response->assertSee('mailto:kadetech.online@gmail.com?subject='.urlencode('Demo request: '.$name), false);
+        }
+
+        $this->assertSame(4, substr_count($response->getContent(), 'Request a demo'));
+    }
+
+    public function test_project_external_links_are_safe(): void
+    {
+        $response = $this->get(route('projects'))->assertOk();
+        $html = $response->getContent();
+
+        preg_match_all('/<a\b[^>]*target="_blank"[^>]*>/', $html, $matches);
+
+        foreach ($matches[0] as $link) {
+            $this->assertStringContainsString('rel="noopener noreferrer"', $link);
+            $this->assertStringContainsString('href="https://', $link);
+            $this->assertStringNotContainsStringIgnoringCase('javascript:', $link);
+        }
+
+        $this->assertStringNotContainsString('javascript:', $html);
+    }
+
     public function test_services_page_links_to_the_built_systems(): void
     {
         $this->get(route('services'))
             ->assertOk()
             ->assertSee(route('projects').'#e-kanisa', false)
-            ->assertSee(route('projects').'#kadepos', false)
-            ->assertSee(route('projects').'#rems', false)
+            ->assertSee(route('projects').'#medicore', false)
+            ->assertSee(route('projects').'#realestate', false)
             ->assertDontSee('View category');
+    }
+
+    public function test_service_deep_links_point_at_existing_project_anchors(): void
+    {
+        $projectsHtml = $this->get(route('projects'))->assertOk()->getContent();
+        preg_match_all('/id="(e-kanisa|medicore|kadefinance|realestate)"/', $projectsHtml, $anchors);
+
+        $servicesHtml = $this->get(route('services'))->assertOk()->getContent();
+        preg_match_all('/'.preg_quote(route('projects'), '/').'#([a-z-]+)/', $servicesHtml, $links);
+
+        $this->assertNotEmpty($anchors[1]);
+        $this->assertNotEmpty($links[1]);
+
+        foreach ($links[1] as $anchor) {
+            $this->assertContains($anchor, $anchors[1], "Service link points at #{$anchor}, which no project defines.");
+        }
     }
 
     public function test_header_topbar_shows_contact_details_with_icons(): void

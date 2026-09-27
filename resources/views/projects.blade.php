@@ -95,16 +95,18 @@
                     'description' => 'Congregation records, member registration, events, tithes, and reporting in one place, so a church office can run its records without keeping parallel notebooks and spreadsheets.',
                     'image' => 'images/kadetech-african-team.jpg',
                     'imageAlt' => 'Group of African church members gathered together',
+                    'url' => '',
                 ],
                 [
-                    'id' => 'kadepos',
-                    'badge' => 'Retail',
-                    'name' => 'KADEPOS',
-                    'title' => 'Point of sale system.',
-                    'label' => 'Counter and stock control',
-                    'description' => 'Product catalogue, stock levels, sales transactions, and receipts handled at the counter, with reporting that shows what moved, when, and what needs restocking.',
-                    'image' => 'images/kadetech-web-development.jpg',
-                    'imageAlt' => 'Shopkeeper using a point of sale system on a laptop',
+                    'id' => 'medicore',
+                    'badge' => 'Health',
+                    'name' => 'Medicore',
+                    'title' => 'Clinic and patient records.',
+                    'label' => 'Appointments, records, and follow-up',
+                    'description' => 'Patient registration, appointments, medical records, and follow-up handled in one place, so a clinic keeps a clear history per patient instead of scattered paper files and memory.',
+                    'image' => 'images/kadetech-african-tech.jpg',
+                    'imageAlt' => 'Healthcare professional working with patient records on a computer',
+                    'url' => '',
                 ],
                 [
                     'id' => 'kadefinance',
@@ -115,16 +117,18 @@
                     'description' => 'Member groups, savings, loans, repayments, and portfolio reporting for microfinance institutions and vicoba, so loan follow-up and group balances stay visible instead of living on paper.',
                     'image' => 'images/kadetech-ai-machine-learning.jpg',
                     'imageAlt' => 'Financial records and reporting analysed on a computer',
+                    'url' => '',
                 ],
                 [
-                    'id' => 'rems',
+                    'id' => 'realestate',
                     'badge' => 'Property',
-                    'name' => 'REMS',
+                    'name' => 'RealEstate',
                     'title' => 'Real estate management system.',
                     'label' => 'Properties, tenants, and rent',
                     'description' => 'Properties, units, tenants, rent records, and maintenance requests managed against each property, so occupancy, arrears, and open repairs are clear at a glance.',
                     'image' => 'images/kadetech-camera-security.jpg',
                     'imageAlt' => 'Residential property managed with a real estate system',
+                    'url' => '',
                 ],
             ];
         @endphp
@@ -149,6 +153,21 @@
                             <p class="mt-2 text-lg font-medium text-[var(--project-accent)] sm:text-xl md:text-2xl">{{ $project['name'] }}</p>
                             <p class="mt-1 text-sm font-medium uppercase tracking-[0.16em] text-slate-500">{!! $project['label'] !!}</p>
                             <p class="mt-5 text-base leading-8 text-slate-600 sm:text-lg sm:leading-9">{{ $project['description'] }}</p>
+
+                            <div class="mt-8 flex flex-wrap items-center gap-3">
+                                @if (filled($project['url']))
+                                    <a href="{{ $project['url'] }}" target="_blank" rel="noopener noreferrer" class="btn-primary">
+                                        Visit live site
+                                        <i class="fa-solid fa-arrow-up-right-from-square h-4 w-4" aria-hidden="true"></i>
+                                        <span class="sr-only">for {{ $project['name'] }} (opens in a new tab)</span>
+                                    </a>
+                                @endif
+                                <a href="mailto:kadetech.online@gmail.com?subject={{ urlencode('Demo request: '.$project['name']) }}" class="{{ filled($project['url']) ? 'btn-secondary' : 'btn-primary' }}">
+                                    Request a demo
+                                    <i class="fa-solid fa-arrow-right h-4 w-4" aria-hidden="true"></i>
+                                    <span class="sr-only">for {{ $project['name'] }}</span>
+                                </a>
+                            </div>
                         </div>
 
                         <div class="lg:col-span-7 lg:pl-8">
